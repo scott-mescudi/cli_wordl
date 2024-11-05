@@ -45,7 +45,7 @@ func clearTerminal() {
 
 
 func getRandomWord() (string, error) {
-	file, err := os.Open("words.txt")
+	file, err := os.Open("wordlists/5_letter_words.txt")
 	if err != nil {
 		return "", err
 	}
