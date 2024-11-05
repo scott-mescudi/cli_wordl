@@ -74,10 +74,6 @@ func help() {
 }
 
 func verifyGuess(guess, word string) (bool, string){
-	if guess == word {
-		return true, fmt.Sprintf("%v%v%v", Green, word, Reset)
-	}
-
 	var builder strings.Builder
 	builder.WriteString("-")
 	for i := 0; i < len(word); i++ {
@@ -92,6 +88,10 @@ func verifyGuess(guess, word string) (bool, string){
 			builder.WriteString(fmt.Sprintf("%v%s%v-", Red, string(c2), Reset))
 		}
 	}
+	if guess == word {
+		return true, builder.String()
+	}
+
 	return false, builder.String()
 }
 
@@ -154,6 +154,7 @@ func main() {
 		fmt.Println(gameBoard(userGuesses))
 
 		if ok {
+			fmt.Println("Congratulations!!!")
 			break
 		}
 	}
