@@ -22,10 +22,6 @@ const (
 
 	br = "┘"
 	bl = "└"
-
-	vl = "│"
-	hl = "─"
-
 )
 
 func clearTerminal() {
