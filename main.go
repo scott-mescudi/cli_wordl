@@ -22,10 +22,6 @@ const (
 
 	br = "┘"
 	bl = "└"
-
-	vl = "│"
-	hl = "─"
-
 )
 
 func clearTerminal() {
@@ -83,28 +79,28 @@ func verifyGuess(guess, word string) (bool, string){
 	}
 
 	var builder strings.Builder
-	builder.WriteString("-")
+	builder.WriteString("│")
 	for i := 0; i < len(word); i++ {
 		c1 := word[i]
 		c2 := guess[i]
 
 		if c1 == c2 {
-			builder.WriteString(fmt.Sprintf("%v%s%v-", Green, string(c2), Reset))
+			builder.WriteString(fmt.Sprintf("%v%s%v│", Green, string(c2), Reset))
 		} else if strings.Contains(word, string(c2)) {
-			builder.WriteString(fmt.Sprintf("%v%s%v-", Magenta, string(c2), Reset))
+			builder.WriteString(fmt.Sprintf("%v%s%v│", Magenta, string(c2), Reset))
 		} else {
-			builder.WriteString(fmt.Sprintf("%v%s%v-", Red, string(c2), Reset))
+			builder.WriteString(fmt.Sprintf("%v%s%v│", Red, string(c2), Reset))
 		}
 	}
 	return false, builder.String()
 }
 
 func buildTop() string {
-	return fmt.Sprintf("%v───────────%v\n", tl, tr)
+	return fmt.Sprintf("%v─┬─┬─┬─┬─%v\n", tl, tr)
 }
 
 func buildBottom() string {
-	return fmt.Sprintf("%v───────────%v", bl, br)
+	return fmt.Sprintf("%v─┴─┴─┴─┴─%v", bl, br)
 }
 
 func gameBoard(userGuesses []string) string {
@@ -112,11 +108,12 @@ func gameBoard(userGuesses []string) string {
 	builder.WriteString(buildTop())
 	
 	for _, v := range userGuesses {
-		builder.WriteString(fmt.Sprintf("│%v│\n", v))
+		builder.WriteString(fmt.Sprintf("%v\n", v))
+		builder.WriteString("├─┼─┼─┼─┼─┤\n")
 	}
 
-
 	builder.WriteString(buildBottom())
+	
 	return builder.String()
 }
 
