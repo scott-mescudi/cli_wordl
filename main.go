@@ -1,9 +1,7 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"log"
 	"math/rand"
 	"os"
 	"os/exec"
@@ -40,31 +38,9 @@ func clearTerminal() {
 }
 
 
-func getRandomWord() (string, error) {
-	file, err := os.Open("wordlists/5_letter_words.txt")
-	if err != nil {
-		return "", err
-	}
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
-
-	x := rand.Intn(3088)
-
-	var (
-		count int
-		word  string
-	)
-
-	for scanner.Scan() {
-		if count == x {
-			word = scanner.Text()
-			break
-		}
-		count++
-	}
-
-	return word, err
+func getRandomWord() (string) {
+	n := rand.Intn(3088)
+	return words[n]
 }
 
 func help() {
@@ -3213,10 +3189,7 @@ func gameStart() {
 }
 
 func main() {
-	word, err := getRandomWord()
-	if err != nil {
-		log.Fatal(err)
-	}
+	word := getRandomWord()
 
 	userGuesses := []string{}
 	var guess string
