@@ -158,3 +158,5 @@ func main() {
 		}
 	}
 }
+// TODO: add option for multiple letter words like 7, 6, 3, 20 etc
+// TODO: filter dict for n letter words
