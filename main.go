@@ -132,7 +132,6 @@ func main() {
 	var guess string
 	gameStart()
 
-
 	for {
 		fmt.Print("> ")
 		fmt.Scan(&guess)
