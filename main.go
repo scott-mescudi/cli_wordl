@@ -129,7 +129,7 @@ func getRandomWord(lettercount int) (string, error) {
 
 func help() {
 	box := "██"
-	fmt.Printf("%v%v%v = letter is in right spot\n%v%v%v = letter is in word but not in right spot\n%v%v%v = letter is not in word\ntype ':q' to exit\n\n", theme.Colors.AcceptColor, box, t.Reset, theme.Colors.InWordColor, box, t.Reset, theme.Colors.WrongColor, box, t.Reset)
+	fmt.Printf("%v%v%v = letter is in right spot\n%v%v%v = letter is in word but not in right spot\n%v%v%v = letter is not in word\ntype ':q' to exit or type ':settings' to change settings\n\n", theme.Colors.AcceptColor, box, t.Reset, theme.Colors.InWordColor, box, t.Reset, theme.Colors.WrongColor, box, t.Reset)
 }
 
 func verifyGuess(guess, word string) (bool, string) {
@@ -235,7 +235,7 @@ func setSettings() bool {
 		return false
 	}
 
-	if xint != 5 {
+	if xint != 0 {
 		letterCount = xint
 		return true
 	}

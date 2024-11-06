@@ -31,18 +31,18 @@ func SetTheme(themeName string) *Theme {
 	case "oceanbreeze":
 		theme = &Theme{
 			Colors: ColorTheme{
-				WrongColor:   "\033[1;34m",  // Deep Blue
-				AcceptColor: "\033[1;36m",  // Cyan
-				InWordColor:  "\033[1;94m",  // Light Blue
-				BoardColor:    "\033[1;37m",  // White
+				WrongColor:   "\033[1;91m",
+				AcceptColor:  "\033[1;96m",
+				InWordColor:  "\033[1;94m",
+				BoardColor:   "\033[1;97m",
 			},
 			Symbols: BorderSymbols{
-				TopRight:    "╮",
-				TopLeft:     "╭",
-				BottomRight: "╯",
-				BottomLeft:  "╰",
-				Horizontal:  "─",
-				Vertical:    "│",
+				TopRight:    "░",
+				TopLeft:     "░",
+				BottomRight: "░",
+				BottomLeft:  "░",
+				Horizontal:  "░",
+				Vertical:    "░",
 			},
 		}
 	case "desertsunset":
@@ -82,10 +82,10 @@ func SetTheme(themeName string) *Theme {
 	case "forestmeadow":
 		theme = &Theme{
 			Colors: ColorTheme{
-				WrongColor:   "\033[1;32m",  // Dark Green
-				AcceptColor: "\033[1;92m",  // Light Green
-				InWordColor:  "\033[1;33m",  // Yellow
-				BoardColor:    "\033[1;93m",  // Light Yellow
+				WrongColor:   "\033[1;31m",  
+				AcceptColor: "\033[1;92m",  
+				InWordColor:  "\033[1;33m",  
+				BoardColor:   "\033[0;32m", 
 			},
 			Symbols: BorderSymbols{
 				TopRight:    "╮",
@@ -99,10 +99,10 @@ func SetTheme(themeName string) *Theme {
 	case "cyberpunkglow":
 		theme = &Theme{
 			Colors: ColorTheme{
-				WrongColor:   "\033[1;35m",  // Magenta
-				AcceptColor: "\033[1;96m",  // Bright Cyan
-				InWordColor:  "\033[1;34m",  // Blue
-				BoardColor:    "\033[1;33m",  // Yellow
+				WrongColor:   "\033[1;95m",  
+				AcceptColor: "\033[1;92m",  
+				InWordColor:  "\033[1;36m",  // Blue
+				BoardColor:    "\033[1;93m",  // Yellow
 			},
 			Symbols: BorderSymbols{
 				TopRight:    "╗",
@@ -117,7 +117,7 @@ func SetTheme(themeName string) *Theme {
 		theme = &Theme{
 			Colors: ColorTheme{
 				WrongColor:   "\033[1;37m",  // White
-				AcceptColor: "\033[1;90m",  // Gray
+				AcceptColor: "\033[1;93m",  // Gray
 				InWordColor:  "\033[1;30m",  // Black
 				BoardColor:    "\033[1;97m",  // Light Gray
 			},
@@ -149,7 +149,6 @@ func SetTheme(themeName string) *Theme {
 			}
 
 	default:
-		// If the theme name does not match, return the default theme
 		theme = &Theme{
 			Colors: ColorTheme{
 				WrongColor:   "\033[1;31m",  // Red
