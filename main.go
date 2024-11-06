@@ -55,7 +55,6 @@ func loadSettings() (*Settings, error) {
 
 
 
-// Function to save settings to config.toml
 func saveSettings(settings *Settings) error {
 	file, err := os.Create("config.toml")
 	if err != nil {
@@ -174,22 +173,22 @@ func BuildBottom(letterCount int) string {
 
 func gameBoard(userGuesses []string) string {
 	var builder strings.Builder
-	builder.WriteString(BuildTop(letterCount)) // Top border
+	builder.WriteString(BuildTop(letterCount)) 
 
-	// Prepare the vertical sides and correct letter alignment for each guess
+	
 	sides := fmt.Sprintf("%v%v%v", theme.Colors.BoardColor, theme.Symbols.Vertical, t.Reset)
 
 	for _, v := range userGuesses {
-		// Ensure each guess has a letter space for each character (padded with spaces if necessary)
+		
 		paddedGuess := v
 		for len(paddedGuess) < letterCount {
-			paddedGuess += " " // Pad the guess with spaces if it’s shorter than `letterCount`
+			paddedGuess += " " 
 		}
 
 		builder.WriteString(fmt.Sprintf("%v%s%v\n", sides, paddedGuess, sides))
 	}
 
-	builder.WriteString(BuildBottom(letterCount)) // Bottom border
+	builder.WriteString(BuildBottom(letterCount)) 
 	return builder.String()
 }
 
@@ -251,13 +250,13 @@ func gameStart() {
 }
 
 func main() {
-	// Load settings from the config.toml file
+	
 	settings, err := loadSettings()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// Use the settings to initialize the theme and letter count
+	
 	themeName = settings.Theme
 	letterCount = settings.LetterCount
 	word, err := getRandomWord(letterCount)
@@ -284,7 +283,6 @@ start:
 		if guess == ":settings" {
 			clearTerminal()
 			if ok := setSettings(); ok {
-				// After settings are changed, save the new settings to the TOML file
 				settings.Theme = themeName
 				settings.LetterCount = letterCount
 				err := saveSettings(settings)
@@ -292,7 +290,7 @@ start:
 					log.Fatal("Error saving settings:", err)
 				}
 				fmt.Println("Settings updated! Closing the game...")
-				os.Exit(0) // Close the program after settings are updated
+				os.Exit(0) 
 			}
 			goto start
 		}
