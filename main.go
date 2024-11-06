@@ -182,9 +182,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	theme = t.SetTheme(themeName)
+	
+	
 	userGuesses := []string{}
 	var guess string
+	start:
+	theme = t.SetTheme(themeName)
 	gameStart()
 
 	for {
@@ -199,8 +202,7 @@ func main() {
 		if guess == ":settings" {
 			clearTerminal()
 			setSettings()
-			clearTerminal()
-			continue
+			goto start
 		}
 
 		if len(guess) != 5{

@@ -105,7 +105,7 @@ func SetTheme(themeName string) *Theme {
 				BoardColor:    "\033[1;33m",  // Yellow
 			},
 			Symbols: BorderSymbols{
-				TopRight:    "═╗",
+				TopRight:    "╗",
 				TopLeft:     "╔",
 				BottomRight: "╝",
 				BottomLeft:  "╚",
