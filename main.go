@@ -200,6 +200,7 @@ func setSettings() bool {
 		- desertsunset
 		- neonnight
 		- forestmeadow
+		- diddy
 		- cyberpunkglow
 		- monochromepop
 		- impossible

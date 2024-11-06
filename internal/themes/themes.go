@@ -62,6 +62,24 @@ func SetTheme(themeName string) *Theme {
 				Vertical:    "┃",
 			},
 		}
+		case "diddy":
+	theme = &Theme{
+		Colors: ColorTheme{
+			WrongColor:   "\033[1;95m",  // Vibrant Pink (playful and tropical)
+			AcceptColor:  "\033[1;92m",  // Bright Green (palm leaves or tropical plants)
+			InWordColor:  "\033[1;93m",  // Bright Yellow (sunshine, bananas)
+			BoardColor:   "\033[1;94m",  // Light Blue (ocean sky color)
+		},
+		Symbols: BorderSymbols{
+			TopRight:    "✿",
+			TopLeft:     "✿",
+			BottomRight: "✿",
+			BottomLeft:  "✿",
+			Horizontal:  "»",
+			Vertical:    "♥",
+		},
+	}
+
 	case "neonnight":
 		theme = &Theme{
 			Colors: ColorTheme{
