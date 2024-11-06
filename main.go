@@ -11,18 +11,120 @@ import (
 	"strings"
 )
 
+
+
+// Reset
+const Reset = "\033[0m"
+
+// Default Theme
 const (
 	Red    = "\033[1;31m"
 	Green  = "\033[1;32m"
 	Magenta = "\033[1;35m"
-	Reset  = "\033[0m"
 
 	tr = "┐"
 	tl = "┌"
-
 	br = "┘"
 	bl = "└"
+	h  = "─"
+	v  = "│"
 )
+
+// Ocean Breeze Theme
+const (
+	ObDeepBlue   = "\033[1;34m"
+	ObCyan       = "\033[1;36m"
+	ObLightBlue  = "\033[1;94m"
+	ObWhite      = "\033[1;37m"
+
+	ObTR = "╮"
+	ObTL = "╭"
+	ObBR = "╯"
+	ObBL = "╰"
+	ObH  = "─"
+	ObV  = "│"
+)
+
+// Desert Sunset Theme
+const (
+	DsRed    = "\033[1;31m"
+	DsOrange = "\033[1;38;5;214m" // RGB escape for warm orange
+	DsYellow = "\033[1;33m"
+	DsBrown  = "\033[1;38;5;94m"  // RGB escape for brownish color
+
+	DsTR = "▞"
+	DsTL = "▚"
+	DsBR = "▚"
+	DsBL = "▞"
+	DsH  = "━"
+	DsV  = "┃"
+)
+
+// Neon Night Theme
+const (
+	NnPurple  = "\033[1;35m"
+	NnLime    = "\033[1;92m"
+	NnCyan    = "\033[1;96m"
+	NnMagenta = "\033[1;95m"
+
+	NnTR = "╖"
+	NnTL = "╓"
+	NnBR = "╜"
+	NnBL = "╙"
+	NnH  = "═"
+	NnV  = "║"
+)
+
+// Forest Meadow Theme
+const (
+	FmDarkGreen  = "\033[1;32m"
+	FmLightGreen = "\033[1;92m"
+	FmBrown      = "\033[1;33m" // Yellow for a brownish tone
+	FmYellow     = "\033[1;93m"
+
+	FmTR = "╮"
+	FmTL = "╭"
+	FmBR = "╯"
+	FmBL = "╰"
+	FmH  = "─"
+	FmV  = "│"
+)
+
+// Cyberpunk Glow Theme
+const (
+	CgMagenta    = "\033[1;35m"
+	CgBrightCyan = "\033[1;96m"
+	CgBlue       = "\033[1;34m"
+	CgYellow     = "\033[1;33m"
+
+	CgTR = "═╗"
+	CgTL = "╔"
+	CgBR = "╝"
+	CgBL = "╚"
+	CgH  = "═"
+	CgV  = "║"
+)
+
+// Monochrome Pop Theme
+const (
+	MpWhite     = "\033[1;37m"
+	MpGray      = "\033[1;90m"
+	MpBlack     = "\033[1;30m"
+	MpLightGray = "\033[1;97m"
+
+	MpTR = "»"
+	MpTL = "«"
+	MpBR = "«"
+	MpBL = "»"
+	MpH  = "─"
+	MpV  = "│"
+)
+
+
+
+
+
+
 
 func clearTerminal() {
 	var cmd *exec.Cmd
