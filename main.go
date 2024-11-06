@@ -11,31 +11,98 @@ import (
 	"strconv"
 	"strings"
 	t "wordl/internal/themes"
+
+	"github.com/BurntSushi/toml" 
 )
 
 var (
-	theme *t.Theme
+	theme       *t.Theme
 	letterCount int = 5
-	themeName string = "wordl"
+	themeName   string = "wordl"
 )
+
+
+type Settings struct {
+	Theme       string `toml:"theme"`
+	LetterCount int    `toml:"letter_count"`
+}
+
+func loadSettings() (*Settings, error) {
+	var settings Settings
+
+	
+	_, err := toml.DecodeFile("config.toml", &settings)
+	if err != nil {
+		
+		if os.IsNotExist(err) {
+			log.Println("config.toml not found, creating a new one with default settings.")
+			settings = Settings{
+				Theme:       "wordl",  
+				LetterCount: 5,        
+			}
+		
+			err := saveSettings(&settings)
+			if err != nil {
+				return nil, fmt.Errorf("error creating default config.toml: %v", err)
+			}
+			log.Println("config.toml created successfully.")
+			return &settings, nil
+		}
+		return nil, err
+	}
+	return &settings, nil
+}
+
+
+
+// Function to save settings to config.toml
+func saveSettings(settings *Settings) error {
+	file, err := os.Create("config.toml")
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	encoder := toml.NewEncoder(file)
+	err = encoder.Encode(settings)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
 
 func clearTerminal() {
 	var cmd *exec.Cmd
 
 	switch runtime.GOOS {
 	case "windows":
-		cmd = exec.Command("cmd", "/c", "cls") 
+		cmd = exec.Command("cmd", "/c", "cls")
 	default:
-		cmd = exec.Command("clear") 
+		cmd = exec.Command("clear")
 	}
 
-	cmd.Stdout = os.Stdout 
+	cmd.Stdout = os.Stdout
 	cmd.Run()
 }
 
+type wordlists struct {
+	Path      string
+	WordCount int
+}
 
-func getRandomWord() (string, error) {
-	file, err := os.Open("wordlists/5_letter_words.txt")
+var wordls = map[int]wordlists{
+	5: wordlists{Path: "wordlists/5_letter_words.txt", WordCount: 3088},
+	2: wordlists{Path: "wordlists/2_letter_words.txt", WordCount: 88},
+	3: wordlists{Path: "wordlists/3_letter_words.txt", WordCount: 682},
+	7: wordlists{Path: "wordlists/7_letter_words.txt", WordCount: 4268},
+	10: wordlists{Path: "wordlists/10_letter_words.txt", WordCount: 2019},
+}
+
+func getRandomWord(lettercount int) (string, error) {
+	wl := wordls[lettercount]
+
+	file, err := os.Open(wl.Path)
 	if err != nil {
 		return "", err
 	}
@@ -43,7 +110,7 @@ func getRandomWord() (string, error) {
 
 	scanner := bufio.NewScanner(file)
 
-	x := rand.Intn(3088)
+	x := rand.Intn(wl.WordCount)
 
 	var (
 		count int
@@ -64,10 +131,9 @@ func getRandomWord() (string, error) {
 func help() {
 	box := "██"
 	fmt.Printf("%v%v%v = letter is in right spot\n%v%v%v = letter is in word but not in right spot\n%v%v%v = letter is not in word\ntype ':q' to exit\n\n", theme.Colors.AcceptColor, box, t.Reset, theme.Colors.InWordColor, box, t.Reset, theme.Colors.WrongColor, box, t.Reset)
-
 }
 
-func verifyGuess(guess, word string) (bool, string){
+func verifyGuess(guess, word string) (bool, string) {
 	var builder strings.Builder
 	builder.WriteString(fmt.Sprintf("%v-%v", theme.Colors.BoardColor, t.Reset))
 	for i := 0; i < len(word); i++ {
@@ -91,7 +157,7 @@ func verifyGuess(guess, word string) (bool, string){
 
 func BuildTop(letterCount int) string {
 	var straight string
-	for range letterCount + letterCount + 1{
+	for range letterCount + letterCount + 1 {
 		straight += theme.Symbols.Horizontal
 	}
 
@@ -100,28 +166,34 @@ func BuildTop(letterCount int) string {
 
 func BuildBottom(letterCount int) string {
 	var straight string
-	for range letterCount + letterCount + 1{
+	for range letterCount + letterCount + 1 {
 		straight += theme.Symbols.Horizontal
 	}
-	return fmt.Sprintf("%v%s%s%s%v", theme.Colors.BoardColor, theme.Symbols.BottomLeft,straight,theme.Symbols.BottomRight, t.Reset)
+	return fmt.Sprintf("%v%s%s%s%v", theme.Colors.BoardColor, theme.Symbols.BottomLeft, straight, theme.Symbols.BottomRight, t.Reset)
 }
 
 func gameBoard(userGuesses []string) string {
 	var builder strings.Builder
-	builder.WriteString(BuildTop(letterCount))
+	builder.WriteString(BuildTop(letterCount)) // Top border
 
-	var sides = fmt.Sprintf("%v%v%v", theme.Colors.BoardColor, theme.Symbols.Vertical, t.Reset)
-	
+	// Prepare the vertical sides and correct letter alignment for each guess
+	sides := fmt.Sprintf("%v%v%v", theme.Colors.BoardColor, theme.Symbols.Vertical, t.Reset)
+
 	for _, v := range userGuesses {
-		builder.WriteString(fmt.Sprintf("%[1]v%v%[1]v\n", sides, v))
+		// Ensure each guess has a letter space for each character (padded with spaces if necessary)
+		paddedGuess := v
+		for len(paddedGuess) < letterCount {
+			paddedGuess += " " // Pad the guess with spaces if it’s shorter than `letterCount`
+		}
+
+		builder.WriteString(fmt.Sprintf("%v%s%v\n", sides, paddedGuess, sides))
 	}
 
-
-	builder.WriteString(BuildBottom(letterCount))
+	builder.WriteString(BuildBottom(letterCount)) // Bottom border
 	return builder.String()
 }
 
-func setSettings() {
+func setSettings() bool {
 	fmt.Println(`
 	Themes:
 		- wordl     (default)
@@ -145,29 +217,31 @@ func setSettings() {
 		t string
 		x string
 	)
-	fmt.Println("Enter a theme: ")
+	fmt.Print("\nEnter a theme: ")
 	fmt.Scan(&t)
-	fmt.Println("\nEnter a letter count: ")
+	fmt.Print("Enter a letter count: ")
 	fmt.Scan(&x)
 
-	if t != "" || t != "default"{
+	if t != "" || t != "default" {
 		themeName = t
 	}
 
-	if x == ""{
-		return
+	if x == "" {
+		return false
 	}
-	
+
 	xint, err := strconv.Atoi(x)
 	if err != nil {
 		log.Println("Failed to change letter count")
-		return
+		return false
 	}
-	
+
 	if xint != 5 {
 		letterCount = xint
+		return true
 	}
-	
+
+	return false
 }
 
 func gameStart() {
@@ -177,16 +251,24 @@ func gameStart() {
 }
 
 func main() {
-	word, err := getRandomWord()
+	// Load settings from the config.toml file
+	settings, err := loadSettings()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	
-	
+	// Use the settings to initialize the theme and letter count
+	themeName = settings.Theme
+	letterCount = settings.LetterCount
+	word, err := getRandomWord(letterCount)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	userGuesses := []string{}
 	var guess string
-	start:
+
+start:
 	theme = t.SetTheme(themeName)
 	gameStart()
 
@@ -195,18 +277,28 @@ func main() {
 		fmt.Print("> ")
 		fmt.Scan(&guess)
 		if guess == ":q" {
-			fmt.Printf("\nThe word was '%v%v%v'",theme.Colors.AcceptColor, word, t.Reset)
+			fmt.Printf("\nThe word was '%v%v%v'", theme.Colors.AcceptColor, word, t.Reset)
 			break
 		}
 
 		if guess == ":settings" {
 			clearTerminal()
-			setSettings()
+			if ok := setSettings(); ok {
+				// After settings are changed, save the new settings to the TOML file
+				settings.Theme = themeName
+				settings.LetterCount = letterCount
+				err := saveSettings(settings)
+				if err != nil {
+					log.Fatal("Error saving settings:", err)
+				}
+				fmt.Println("Settings updated! Closing the game...")
+				os.Exit(0) // Close the program after settings are updated
+			}
 			goto start
 		}
 
-		if len(guess) != 5{
-			fmt.Printf("%vinvalid guess%v: want 5 have %v letters\n", theme.Colors.WrongColor, t.Reset, len(guess))
+		if len(guess) != letterCount {
+			fmt.Printf("%vinvalid guess%v: want %v have %v letters\n", theme.Colors.WrongColor, t.Reset, letterCount, len(guess))
 			continue
 		}
 		clearTerminal()
