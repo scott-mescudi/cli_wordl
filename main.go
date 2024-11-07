@@ -91,11 +91,11 @@ type wordlists struct {
 }
 
 var wordls = map[int]wordlists{
-	5: wordlists{Path: "wordlists/5_letter_words.txt", WordCount: 3088},
-	2: wordlists{Path: "wordlists/2_letter_words.txt", WordCount: 88},
-	3: wordlists{Path: "wordlists/3_letter_words.txt", WordCount: 682},
-	7: wordlists{Path: "wordlists/7_letter_words.txt", WordCount: 4268},
-	10: wordlists{Path: "wordlists/10_letter_words.txt", WordCount: 2019},
+	5: {Path: "wordlists/5_letter_words.txt", WordCount: 3088},
+	2: {Path: "wordlists/2_letter_words.txt", WordCount: 88},
+	3: {Path: "wordlists/3_letter_words.txt", WordCount: 682},
+	7: {Path: "wordlists/7_letter_words.txt", WordCount: 4268},
+	10: {Path: "wordlists/10_letter_words.txt", WordCount: 2019},
 }
 
 func getRandomWord(lettercount int) (string, error) {
@@ -222,9 +222,10 @@ func setSettings() bool {
 	fmt.Print("Enter a letter count: ")
 	fmt.Scan(&x)
 
-	if t != "" || t != "default" {
-		themeName = t
+	if t == "" {
+		return false
 	}
+	themeName = t
 
 	if x == "" {
 		return false
@@ -251,7 +252,6 @@ func gameStart() {
 }
 
 func main() {
-	
 	settings, err := loadSettings()
 	if err != nil {
 		log.Fatal(err)
@@ -274,10 +274,15 @@ start:
 
 	for {
 		theme = t.SetTheme(themeName)
+
+		if themeName == "impossible" && len(userGuesses) == 5{
+			fmt.Printf("\nThe word was '%v%v%v'\n", theme.Colors.AcceptColor, word, t.Reset)
+			break
+		}
 		fmt.Print("> ")
 		fmt.Scan(&guess)
 		if guess == ":q" {
-			fmt.Printf("\nThe word was '%v%v%v'", theme.Colors.AcceptColor, word, t.Reset)
+			fmt.Printf("\nThe word was '%v%v%v'\n", theme.Colors.AcceptColor, word, t.Reset)
 			break
 		}
 
@@ -285,7 +290,7 @@ start:
 			clearTerminal()
 			if ok := setSettings(); ok {
 				settings.Theme = themeName
-				settings.LetterCount = letterCount 
+				settings.LetterCount = letterCount
 				err := saveSettings(settings)
 				if err != nil {
 					log.Fatal("Error saving settings:", err)
