@@ -285,7 +285,7 @@ start:
 			clearTerminal()
 			if ok := setSettings(); ok {
 				settings.Theme = themeName
-				settings.LetterCount = letterCount //add check here else default to 5
+				settings.LetterCount = letterCount 
 				err := saveSettings(settings)
 				if err != nil {
 					log.Fatal("Error saving settings:", err)
